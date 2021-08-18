@@ -6,7 +6,7 @@
 
 # 张大妈自动签到
 
-import requests, os, datetime, sys
+import requests, os, datetime, sys, json
 from sys import argv
 
 """
@@ -81,5 +81,6 @@ if __name__ == '__main__':
     cookies = os.environ[KEY_OF_COOKIE]
     bot.load_cookie_str(cookies)
     res = bot.checkin()
-    logout(res)
+    dic = json.load(json.dump(res))
+    logout("签到成功:\n已连续签到[{0}]天".format(dic.data.checkin_num))
     logout("签到结束")
