@@ -40,7 +40,7 @@ class SMZDM_Bot(object):
     def __init__(self):
         self.session = requests.Session()
         # 添加 headers
-        self.session.headers = config.DEFAULT_HEADERS
+        self.session.headers = DEFAULT_HEADERS
 
     def __json_check(self, msg):
         """
