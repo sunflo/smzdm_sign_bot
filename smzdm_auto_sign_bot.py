@@ -124,8 +124,8 @@ class SignBot(object):
 
 if __name__ == '__main__':
     bot = SignBot()
-    # cookies = os.environ[KEY_OF_COOKIE]
-    cookies ="adasd"
+    cookies = os.environ[KEY_OF_COOKIE]
+    # cookies ="adasd"
     bot.load_cookie_str(cookies)
     result = bot.checkin()
     msg = "\n✔✔✔✔✔签到成功:\n已连续签到[{0}]天\n🏅🏅🏅金币[{1}]\n🏅🏅🏅积分[{2}]\n🏅🏅🏅经验[{3}],\n🏅🏅🏅等级[{4}]\n🏅🏅补签卡[{5}]".format(
