@@ -81,6 +81,6 @@ if __name__ == '__main__':
     cookies = os.environ[KEY_OF_COOKIE]
     bot.load_cookie_str(cookies)
     res = bot.checkin()
-    dic = json.load(json.dump(res))
+    dic = json.load(json.dumps(res))
     logout("签到成功:\n已连续签到[{0}]天".format(dic.data.checkin_num))
     logout("签到结束")
