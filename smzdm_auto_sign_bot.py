@@ -3,6 +3,11 @@
 
 借鉴（copy）自lws1122,fork 自:https://gitee.com/lsw1122/smzdm_bot
 """
+
+'''
+cron: 0 0,7,10 * * * jd_jxgc_tuan.py
+new Env('张大妈自动签到');
+'''
 import requests, os, datetime, sys
 from sys import argv
 
