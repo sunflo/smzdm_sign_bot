@@ -3,8 +3,10 @@
 
 借鉴（copy）自lws1122,fork 自:https://gitee.com/lsw1122/smzdm_bot
 """
-
-# 张大妈自动签到
+'''
+cron: 0 1 * * * smzdm_auto_sign_bot.py
+new Env('张大妈自动签到');
+'''
 
 import requests, os, datetime, sys
 from sys import argv
