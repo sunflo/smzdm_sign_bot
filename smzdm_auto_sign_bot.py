@@ -6,7 +6,7 @@
 
 # 张大妈自动签到
 
-import requests, os, datetime, sys, json
+import requests, os, datetime, sys
 from sys import argv
 
 """
@@ -51,7 +51,6 @@ class SignBot(object):
         """
         try:
             result = msg.json()
-            logout(result)
             return True
         except Exception as e:
             logout(f'Error : {e}')
@@ -80,7 +79,18 @@ if __name__ == '__main__':
     bot = SignBot()
     cookies = os.environ[KEY_OF_COOKIE]
     bot.load_cookie_str(cookies)
-    res = bot.checkin()
-    dic = json.load(json.dumps(res))
-    logout("签到成功:\n已连续签到[{0}]天".format(dic.data.checkin_num))
+    result = bot.checkin()
+    logout("\n✔✔✔✔✔签到成功:"
+           "\n已连续签到[{0}]天"
+           "\n🏅🏅🏅金币[{1}]"
+           "\n🏅🏅🏅积分[{2}]"
+           "\n🏅🏅🏅经验[{3}],"
+           "\n🏅🏅🏅等级[{4}]"
+           "\n🏅🏅补签卡[{5}]"
+           .format(result['data']["checkin_num"],
+                   result['data']["gold"],
+                   result['data']["point"],
+                   result['data']["exp"],
+                   result['data']["rank"],
+                   result['data']["cards"]))
     logout("签到结束")
