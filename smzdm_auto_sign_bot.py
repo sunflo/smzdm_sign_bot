@@ -36,6 +36,11 @@ KEY_OF_COOKIE = "SMZDM_COOKIE"
 TG_TOKEN = ''
 TG_USER_ID = ''
 
+if "TG_BOT_TOKEN" in os.environ and len(os.environ["TG_BOT_TOKEN"]) > 1 and "TG_USER_ID" in os.environ and len(
+        os.environ["TG_USER_ID"]) > 1:
+    TG_TOKEN = os.environ["TG_BOT_TOKEN"]
+    TG_USER_ID = os.environ["TG_USER_ID"]
+
 
 def logout(self):
     print("[{0}]: {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self))
@@ -51,7 +56,7 @@ def telegram_bot(title, content):
             print("tg服务的bot_token或者user_id未设置!!\n取消推送")
             return
         print("tg服务启动")
-        url = f"https://api.telegram.org/bot{TG_BOT_TOKEN}/sendMessage"
+        url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
 
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         payload = {'chat_id': str(TG_USER_ID), 'text': f'{title}\n\n{content}', 'disable_web_page_preview': 'true'}
@@ -106,21 +111,6 @@ class SignBot(object):
             return msg.json()
         return msg.content
 
-    def push_via_telegram(self, content):
-        """
-        电报发送签到结果
-        """
-
-        if "TG_BOT_TOKEN" in os.environ and len(os.environ["TG_BOT_TOKEN"]) > 1 and "TG_USER_ID" in os.environ and len(
-                os.environ["TG_USER_ID"]) > 1:
-            TG_TOKEN = os.environ["TG_BOT_TOKEN"]
-            TG_USER_ID = os.environ["TG_USER_ID"]
-            telegram_bot("张大妈自动签到", content)
-            return True
-        else:
-            telegram_bot("张大妈自动签到", "签到失败")
-            return False
-
 
 if __name__ == '__main__':
     bot = SignBot()
@@ -136,5 +126,5 @@ if __name__ == '__main__':
         result['data']["rank"],
         result['data']["cards"])
     logout(msg)
-    bot.push_via_telegram(msg)
+    telegram_bot("张大妈自动签到", msg)
     logout("签到结束")
