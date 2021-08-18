@@ -33,10 +33,40 @@ SIGN_URL = 'https://zhiyou.smzdm.com/user/checkin/jsonp_checkin'
 # 环境变量中用于存放cookie的key值
 KEY_OF_COOKIE = "SMZDM_COOKIE"
 
+TG_TOKEN = ''
+TG_USER_ID = ''
+
 
 def logout(self):
     print("[{0}]: {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self))
     sys.stdout.flush()
+
+
+def telegram_bot(title, content):
+    try:
+        print("\n")
+        bot_token = TG_TOKEN
+        user_id = TG_USER_ID
+        if not bot_token or not user_id:
+            print("tg服务的bot_token或者user_id未设置!!\n取消推送")
+            return
+        print("tg服务启动")
+        url = f"https://api.telegram.org/bot{TG_BOT_TOKEN}/sendMessage"
+
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        payload = {'chat_id': str(TG_USER_ID), 'text': f'{title}\n\n{content}', 'disable_web_page_preview': 'true'}
+        proxies = None
+
+        try:
+            response = requests.post(url=url, headers=headers, params=payload, proxies=proxies).json()
+        except:
+            print('推送失败！')
+        if response['ok']:
+            print('推送成功！')
+        else:
+            print('推送失败！')
+    except Exception as e:
+        print(e)
 
 
 class SignBot(object):
@@ -76,23 +106,35 @@ class SignBot(object):
             return msg.json()
         return msg.content
 
+    def push_via_telegram(self, content):
+        """
+        电报发送签到结果
+        """
+
+        if "TG_BOT_TOKEN" in os.environ and len(os.environ["TG_BOT_TOKEN"]) > 1 and "TG_USER_ID" in os.environ and len(
+                os.environ["TG_USER_ID"]) > 1:
+            TG_TOKEN = os.environ["TG_BOT_TOKEN"]
+            TG_USER_ID = os.environ["TG_USER_ID"]
+            telegram_bot("张大妈自动签到", content)
+            return True
+        else:
+            telegram_bot("张大妈自动签到", "签到失败")
+            return False
+
 
 if __name__ == '__main__':
     bot = SignBot()
-    cookies = os.environ[KEY_OF_COOKIE]
+    # cookies = os.environ[KEY_OF_COOKIE]
+    cookies ="adasd"
     bot.load_cookie_str(cookies)
     result = bot.checkin()
-    logout("\n✔✔✔✔✔签到成功:"
-           "\n已连续签到[{0}]天"
-           "\n🏅🏅🏅金币[{1}]"
-           "\n🏅🏅🏅积分[{2}]"
-           "\n🏅🏅🏅经验[{3}],"
-           "\n🏅🏅🏅等级[{4}]"
-           "\n🏅🏅补签卡[{5}]"
-           .format(result['data']["checkin_num"],
-                   result['data']["gold"],
-                   result['data']["point"],
-                   result['data']["exp"],
-                   result['data']["rank"],
-                   result['data']["cards"]))
+    msg = "\n✔✔✔✔✔签到成功:\n已连续签到[{0}]天\n🏅🏅🏅金币[{1}]\n🏅🏅🏅积分[{2}]\n🏅🏅🏅经验[{3}],\n🏅🏅🏅等级[{4}]\n🏅🏅补签卡[{5}]".format(
+        result['data']["checkin_num"],
+        result['data']["gold"],
+        result['data']["point"],
+        result['data']["exp"],
+        result['data']["rank"],
+        result['data']["cards"])
+    logout(msg)
+    bot.push_via_telegram(msg)
     logout("签到结束")
