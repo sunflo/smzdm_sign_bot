@@ -115,9 +115,7 @@ if __name__ == '__main__':
     bot = SignBot()
     cookies = os.environ[KEY_OF_COOKIE]
     cookieList = cookies.split("&")
-    size = len(cookieList)
-    logout("检测到{}个cookie记录".format(size))
-    logout("开始签到")
+    logout("检测到{}个cookie记录\n开始签到".format(len(cookieList)))
     for c in cookieList:
         bot.load_cookie_str(c)
         result = bot.checkin()
