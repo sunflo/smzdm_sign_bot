@@ -115,6 +115,7 @@ class SignBot(object):
 if __name__ == '__main__':
     bot = SignBot()
     cookies = os.environ[KEY_OF_COOKIE]
+    logout(len(cookies))
     # cookies ="adasd"
     bot.load_cookie_str(cookies)
     result = bot.checkin()
