@@ -116,10 +116,12 @@ if __name__ == '__main__':
     cookies = os.environ[KEY_OF_COOKIE]
     cookieList = cookies.split("&")
     logout("检测到{}个cookie记录\n开始签到".format(len(cookieList)))
+    index = 0
     for c in cookieList:
         bot.load_cookie_str(c)
         result = bot.checkin()
-        msg = "\n✔✔✔✔✔签到成功:\n已连续签到[{0}]天\n🏅🏅🏅金币[{1}]\n🏅🏅🏅积分[{2}]\n🏅🏅🏅经验[{3}],\n🏅🏅🏅等级[{4}]\n🏅🏅补签卡[{5}]".format(
+        msg = "\n⭐⭐⭐签到成功⭐⭐⭐\n\n已连续签到[{1}]天\n\n🏅🏅🏅金币[{2}]\n🏅🏅🏅积分[{3}]\n🏅🏅🏅经验[{4}],\n🏅🏅🏅等级[{5}]\n🏅🏅补签卡[{6}]".format(
+            index,
             result['data']["checkin_num"],
             result['data']["gold"],
             result['data']["point"],
@@ -128,4 +130,5 @@ if __name__ == '__main__':
             result['data']["cards"])
         logout(msg)
         telegram_bot("张大妈自动签到", msg)
+        index += 1
     logout("签到结束")
