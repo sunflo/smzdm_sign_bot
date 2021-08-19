@@ -105,7 +105,6 @@ class SignBot(object):
         """
         签到函数
         """
-        logout("开始签到")
         msg = self.session.get(SIGN_URL)
         if self.__json_check(msg):
             return msg.json()
@@ -115,17 +114,20 @@ class SignBot(object):
 if __name__ == '__main__':
     bot = SignBot()
     cookies = os.environ[KEY_OF_COOKIE]
-    logout(cookies)
-    # cookies ="adasd"
-    bot.load_cookie_str(cookies)
-    result = bot.checkin()
-    msg = "\n✔✔✔✔✔签到成功:\n已连续签到[{0}]天\n🏅🏅🏅金币[{1}]\n🏅🏅🏅积分[{2}]\n🏅🏅🏅经验[{3}],\n🏅🏅🏅等级[{4}]\n🏅🏅补签卡[{5}]".format(
-        result['data']["checkin_num"],
-        result['data']["gold"],
-        result['data']["point"],
-        result['data']["exp"],
-        result['data']["rank"],
-        result['data']["cards"])
-    logout(msg)
-    telegram_bot("张大妈自动签到", msg)
+    cookieList = cookies.split("&")
+    size = len(cookieList)
+    logout("检测到{}个cookie记录".format(size))
+    logout("开始签到")
+    for c in cookieList:
+        bot.load_cookie_str(c)
+        result = bot.checkin()
+        msg = "\n✔✔✔✔✔签到成功:\n已连续签到[{0}]天\n🏅🏅🏅金币[{1}]\n🏅🏅🏅积分[{2}]\n🏅🏅🏅经验[{3}],\n🏅🏅🏅等级[{4}]\n🏅🏅补签卡[{5}]".format(
+            result['data']["checkin_num"],
+            result['data']["gold"],
+            result['data']["point"],
+            result['data']["exp"],
+            result['data']["rank"],
+            result['data']["cards"])
+        logout(msg)
+        telegram_bot("张大妈自动签到", msg)
     logout("签到结束")
