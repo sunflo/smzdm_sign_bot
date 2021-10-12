@@ -48,7 +48,6 @@ def logout(self):
 
 
 def loadSend():
-    logout("加载ql自带的推送模块")
     global send
     send = None
     cur_path = os.path.abspath(os.path.dirname(__file__))
