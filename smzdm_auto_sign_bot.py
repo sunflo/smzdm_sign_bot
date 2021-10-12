@@ -47,6 +47,21 @@ def logout(self):
     sys.stdout.flush()
 
 
+def loadSend():
+    logout("加载ql自带的推送模块")
+    global send
+    send = None
+    cur_path = os.path.abspath(os.path.dirname(__file__))
+    sys.path.append(cur_path)
+    if os.path.exists(cur_path + "/sendNotify.py"):
+        try:
+            from sendNotify import send
+            logout("加载ql自带的推送模块")
+        except Exception as e:
+            send = None
+            logout("加载通知服务失败~", e)
+
+
 def telegram_bot(title, content):
     try:
         print("\n")
@@ -116,6 +131,7 @@ if __name__ == '__main__':
     cookies = os.environ[KEY_OF_COOKIE]
     cookieList = cookies.split("&")
     logout("检测到{}个cookie记录\n开始签到".format(len(cookieList)))
+    loadSend()
     index = 0
     for c in cookieList:
         bot.load_cookie_str(c)
@@ -129,6 +145,10 @@ if __name__ == '__main__':
             result['data']["rank"],
             result['data']["cards"])
         logout(msg)
-        telegram_bot("张大妈自动签到", msg)
+        if (send):
+            send("张大妈自动签到", msg)
+        else:
+            logout("未注册推送，取消推送")
+            # telegram_bot("张大妈自动签到", msg)
         index += 1
     logout("签到结束")
