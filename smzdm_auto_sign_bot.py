@@ -17,6 +17,7 @@ import hmac
 import hashlib
 import base64
 import urllib.parse
+
 """
 http headers
 """
@@ -155,20 +156,23 @@ def push_plus_bot(title, content):
 
 
 def serverJ(title, content):
-    print("\n")
-    if not SCKEY:
-        print("server酱服务的SCKEY未设置!!\n取消推送")
-        return
-    print("serverJ服务启动")
-    data = {
-        "text": title,
-        "desp": content.replace("\n", "\n\n")
-    }
-    response = requests.post(f"https://sc.ftqq.com/{SCKEY}.send", data=data).json()
-    if response['errno'] == 0:
-        print('推送成功！')
-    else:
-        print('推送失败！')
+    try:
+        print("\n")
+        if not SCKEY:
+            print("server酱服务的SCKEY未设置!!\n取消推送")
+            return
+        print("serverJ服务启动")
+        data = {
+            "title": title,
+            "desp": content.replace("\n", "\n\n")
+        }
+        response = requests.post("https://sctapi.ftqq.com/{SCKEY}.send", data=data).json()
+        if response['errno'] == 0:
+            print('推送成功！')
+        else:
+            print('推送失败！')
+    except Exception as e:
+        print(e)
 
 
 class SignBot(object):
