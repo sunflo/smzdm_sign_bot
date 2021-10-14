@@ -8,9 +8,15 @@ cron: 0 1 * * * smzdm_auto_sign_bot.py
 new Env('张大妈自动签到');
 '''
 
-import requests, os, datetime, sys,time
+import requests, os, datetime, sys
 from sys import argv
-
+import requests
+import json
+import time
+import hmac
+import hashlib
+import base64
+import urllib.parse
 """
 http headers
 """
@@ -70,7 +76,6 @@ def push_via_boot(title, content):
     telegram_bot(title, content)
     serverJ(title, content)
     push_plus_bot(title, content)
-
 
 
 def dingding_bot(title, content):
