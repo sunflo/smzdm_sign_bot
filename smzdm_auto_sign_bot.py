@@ -208,7 +208,6 @@ if __name__ == '__main__':
     cookies = os.environ[KEY_OF_COOKIE]
     cookieList = cookies.split("&")
     logout("检测到{}个cookie记录\n开始签到".format(len(cookieList)))
-    loadSend()
     index = 0
     for c in cookieList:
         bot.load_cookie_str(c)
