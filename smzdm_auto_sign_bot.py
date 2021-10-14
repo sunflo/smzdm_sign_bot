@@ -8,7 +8,7 @@ cron: 0 1 * * * smzdm_auto_sign_bot.py
 new Env('张大妈自动签到');
 '''
 
-import requests, os, datetime, sys
+import requests, os, datetime, sys,time
 from sys import argv
 
 """
