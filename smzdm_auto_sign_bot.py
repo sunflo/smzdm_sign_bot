@@ -65,22 +65,12 @@ def logout(self):
     sys.stdout.flush()
 
 
-def loadSend():
-    global send
-    send = None
-    cur_path = os.path.abspath(os.path.dirname(__file__))
-    sys.path.append(cur_path)
-    if os.path.exists(cur_path + "/sendNotify.py"):
-        try:
-            from sendNotify import send
-            logout("加载ql自带的推送模块")
-        except Exception as e:
-            send = None
-            logout("加载通知服务失败~", e)
-
-
 def push_via_boot(title, content):
-    logout("开始推送，暂时支持【Telegram】【钉钉】【push+】【serverJ】")
+    dingding_bot(title, content)
+    telegram_bot(title, content)
+    serverJ(title, content)
+    push_plus_bot(title, content)
+
 
 
 def dingding_bot(title, content):
@@ -232,11 +222,8 @@ if __name__ == '__main__':
             result['data']["rank"],
             result['data']["cards"])
         logout(msg)
-        if (send):
-            send("张大妈自动签到", msg)
-        else:
-            logout("未注册推送，取消推送")
-            # telegram_bot("张大妈自动签到", msg)
+        logout("开始推送，暂时支持【Telegram】【钉钉】【push+】【serverJ】")
         push_via_boot("张大妈自动签到", msg)
+        # telegram_bot("张大妈自动签到", msg)
         index += 1
     logout("签到结束")
