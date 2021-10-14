@@ -35,11 +35,29 @@ KEY_OF_COOKIE = "SMZDM_COOKIE"
 
 TG_TOKEN = ''
 TG_USER_ID = ''
+# serverJ
+SCKEY = ''
+# push+
+PUSH_PLUS_TOKEN = ''
+# 钉钉机器人
+DD_BOT_TOKEN = ''
+DD_BOT_SECRET = ''
 
 if "TG_BOT_TOKEN" in os.environ and len(os.environ["TG_BOT_TOKEN"]) > 1 and "TG_USER_ID" in os.environ and len(
         os.environ["TG_USER_ID"]) > 1:
     TG_TOKEN = os.environ["TG_BOT_TOKEN"]
     TG_USER_ID = os.environ["TG_USER_ID"]
+
+if "PUSH_KEY" in os.environ and len(os.environ["PUSH_KEY"]) > 1:
+    SCKEY = os.environ["PUSH_KEY"]
+
+if "DD_BOT_TOKEN" in os.environ and len(os.environ["DD_BOT_TOKEN"]) > 1 and "DD_BOT_SECRET" in os.environ and len(
+        os.environ["DD_BOT_SECRET"]) > 1:
+    DD_BOT_TOKEN = os.environ["DD_BOT_TOKEN"]
+    DD_BOT_SECRET = os.environ["DD_BOT_SECRET"]
+
+if "PUSH_PLUS_TOKEN" in os.environ and len(os.environ["PUSH_PLUS_TOKEN"]) > 1:
+    PUSH_PLUS_TOKEN = os.environ["PUSH_PLUS_TOKEN"]
 
 
 def logout(self):
@@ -59,6 +77,34 @@ def loadSend():
         except Exception as e:
             send = None
             logout("加载通知服务失败~", e)
+
+
+def push_via_boot(title, content):
+    logout("开始推送，暂时支持【Telegram】【钉钉】【push+】【serverJ】")
+
+
+def dingding_bot(title, content):
+    if not DD_BOT_TOKEN or not DD_BOT_SECRET:
+        print("钉钉推送服务的DD_BOT_TOKEN或者DD_BOT_SECRET未设置!!\n取消推送")
+        return
+    timestamp = str(round(time.time() * 1000))  # 时间戳
+    secret_enc = DD_BOT_SECRET.encode('utf-8')
+    string_to_sign = '{}\n{}'.format(timestamp, DD_BOT_SECRET)
+    string_to_sign_enc = string_to_sign.encode('utf-8')
+    hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+    sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))  # 签名
+    print('开始使用 钉钉机器人 推送消息...', end='')
+    url = f'https://oapi.dingtalk.com/robot/send?access_token={DD_BOT_TOKEN}&timestamp={timestamp}&sign={sign}'
+    headers = {'Content-Type': 'application/json;charset=utf-8'}
+    data = {
+        'msgtype': 'text',
+        'text': {'content': f'{title}\n\n{content}'}
+    }
+    response = requests.post(url=url, data=json.dumps(data), headers=headers, timeout=15).json()
+    if not response['errcode']:
+        print('推送成功！')
+    else:
+        print('推送失败！')
 
 
 def telegram_bot(title, content):
@@ -86,6 +132,48 @@ def telegram_bot(title, content):
             print('推送失败！')
     except Exception as e:
         print(e)
+
+
+# push推送
+def push_plus_bot(title, content):
+    try:
+        print("\n")
+        if not PUSH_PLUS_TOKEN:
+            print("PUSHPLUS服务的token未设置!!\n取消推送")
+            return
+        print("PUSHPLUS服务启动")
+        url = 'http://pushplus.hxtrip.com/send'
+        data = {
+            "token": PUSH_PLUS_TOKEN,
+            "title": title,
+            "content": content
+        }
+        body = json.dumps(data).encode(encoding='utf-8')
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(url=url, data=body, headers=headers).json()
+        if response['code'] == 200:
+            print('推送成功！')
+        else:
+            print('推送失败！')
+    except Exception as e:
+        print(e)
+
+
+def serverJ(title, content):
+    print("\n")
+    if not SCKEY:
+        print("server酱服务的SCKEY未设置!!\n取消推送")
+        return
+    print("serverJ服务启动")
+    data = {
+        "text": title,
+        "desp": content.replace("\n", "\n\n")
+    }
+    response = requests.post(f"https://sc.ftqq.com/{SCKEY}.send", data=data).json()
+    if response['errno'] == 0:
+        print('推送成功！')
+    else:
+        print('推送失败！')
 
 
 class SignBot(object):
@@ -149,5 +237,6 @@ if __name__ == '__main__':
         else:
             logout("未注册推送，取消推送")
             # telegram_bot("张大妈自动签到", msg)
+        push_via_boot("张大妈自动签到", msg)
         index += 1
     logout("签到结束")
