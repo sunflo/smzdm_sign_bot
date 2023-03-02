@@ -1,15 +1,12 @@
 ~~什么值得买每日签到脚本(失效停止维护)~~
 ===
-<p>
-    <img src="https://img.shields.io/badge/Created on-2021.8-green"/>
-    <img src="https://img.shields.io/badge/Python-3.7-blue"/>
-    <img src="https://img.shields.io/badge/Last commit-Aut.-yellow"/>
-    <img src="https://img.shields.io/badge/Repo size-35.8kb-red"/>
-</p>
+ 
 
  
 
 ## 声明
+
+
  + 借鉴(chao) 自 [lsw1122](https://gitee.com/lsw1122) 的开源项目:[什么值得买每日签到脚本](https://gitee.com/lsw1122/smzdm_bot)
  + 原作者似乎很久没维护了，所以为了自己使用方便，在其基础上集成了青龙面板的逻辑
  + server酱最近相当不稳定，而且似乎公众号推送后期将废弃，所以把原来里面的逻辑去掉了
