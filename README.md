@@ -1,4 +1,4 @@
-什么值得买每日签到脚本 
+~~什么值得买每日签到脚本(失效停止维护)~~
 ===
 <p>
     <img src="https://img.shields.io/badge/Created on-2021.8-green"/>
